@@ -40,34 +40,36 @@ def songs(artist):
     soup = BeautifulSoup(req.content, 'html.parser')
 
     all_albums = soup.find('div', id='listAlbum')
-    first_album = all_albums.find('div', class_='album')
-    album_name = first_album.b.text.strip('"')
-    songs = []
+    if all_albums is not None:
+        first_album = all_albums.find('div', class_='album')
+        album_name = first_album.b.text.strip('"')
+        songs = []
 
-    for tag in first_album.find_next_siblings(['a', 'div']):
-        if tag.has_attr('class'):
-            tag_class = tag['class'][0]
-            if tag_class == 'album':
-                artist['albums'][album_name] = songs
-                songs = []
-                if tag.b is None:
-                    pass
-                elif tag.b:
-                    album_name = tag.b.text.strip('"')
+        for tag in first_album.find_next_siblings(['a', 'div']):
+            if tag.has_attr('class'):
+                tag_class = tag['class'][0]
+                if tag_class == 'album':
+                    artist['albums'][album_name] = songs
+                    songs = []
+                    if tag.b is None:
+                        pass
+                    elif tag.b:
+                        album_name = tag.b.text.strip('"')
 
-            elif tag_class == "listalbum-item":
-                song_tag = tag.contents[0]
-                if song_tag.text is "":
-                    pass
-                elif song_tag.text:
-                    url_name = song_tag['href']
-                    url_name = re.search('(?<=/).*(?=\.html)', url_name).group(0)
-                    url_name = re.search('(?<=/).*', url_name).group(0)
-                    url_name = re.search('(?<=/).*', url_name).group(0)
-                    songs.append({"name": tag.text, "url": url_name})
+                elif tag_class == "listalbum-item":
+                    song_tag = tag.contents[0]
+                    if song_tag.text is "":
+                        pass
+                    elif song_tag.text:
+                        url_name = song_tag['href']
+                        url_name = re.search('(?<=/).*(?=\.html)', url_name).group(0)
+                        url_name = re.search('(?<=/).*', url_name).group(0)
+                        url_name = re.search('(?<=/).*', url_name).group(0)
+                        songs.append({"name": tag.text, "url": url_name})
 
-    artist['albums'][album_name] = songs
-
+        artist['albums'][album_name] = songs
+    if len(artist['albums'] == 0):
+        return None
     return artist
 
 
