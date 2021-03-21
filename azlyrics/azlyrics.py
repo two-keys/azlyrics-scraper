@@ -44,6 +44,8 @@ def songs(artist):
     songs = []
 
     for tag in first_album.find_next_siblings(['a', 'div']):
+        print("tag",":",tag)
+        print("class",":",tag['class'])
         tag_class = tag['class'][0]
         if tag_class == 'album':
             artist['albums'][album_name] = songs
