@@ -68,7 +68,7 @@ def songs(artist):
                         songs.append({"name": tag.text, "url": url_name})
 
         artist['albums'][album_name] = songs
-    if len(artist['albums'] == 0):
+    else:
         return None
     return artist
 
