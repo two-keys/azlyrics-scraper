@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+import re
 
 agent = 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) \
         Gecko/20100101 Firefox/24.0'
@@ -55,10 +56,13 @@ def songs(artist):
                     album_name = tag.b.text.strip('"')
 
             elif tag_class == "listalbum-item":
-                if tag.text is "":
+                song_tag = tag.contents[0]
+                if song_tag.text is "":
                     pass
-                elif tag.text:
-                    songs.append(tag.text)
+                elif song_tag.text:
+                    url_name = song_tag['href']
+                    url_name = re.search('(?<=lyrics/./).(?=\.html)')
+                    songs.append({"name": tag.text, "url": url_name})
 
     artist['albums'][album_name] = songs
 
