@@ -45,21 +45,22 @@ def songs(artist):
 
     for tag in first_album.find_next_siblings(['a', 'div']):
         print("tag",":",tag)
-        print("class",":",tag['class'])
-        tag_class = tag['class'][0]
-        if tag_class == 'album':
-            artist['albums'][album_name] = songs
-            songs = []
-            if tag.b is None:
-                pass
-            elif tag.b:
-                album_name = tag.b.text.strip('"')
+        print("class-exists",":",tag.has_attr('class'))
+        if tag.has_attr('class'):
+            tag_class = tag['class'][0]
+            if tag_class == 'album':
+                artist['albums'][album_name] = songs
+                songs = []
+                if tag.b is None:
+                    pass
+                elif tag.b:
+                    album_name = tag.b.text.strip('"')
 
-        elif tag_class == "listalbum-item":
-            if tag.text is "":
-                pass
-            elif tag.text:
-                songs.append(tag.text)
+            elif tag_class == "listalbum-item":
+                if tag.text is "":
+                    pass
+                elif tag.text:
+                    songs.append(tag.text)
 
     artist['albums'][album_name] = songs
 
