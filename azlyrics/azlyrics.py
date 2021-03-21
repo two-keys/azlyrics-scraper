@@ -20,7 +20,9 @@ def artists(letter):
         for div in soup.find_all("div", {"class": "container main-page"}):
             links = div.findAll('a')
             for a in links:
-                data.append(a.text.strip())
+                url_name = a['href']
+                url_name = re.search('(?<=/).*(?=\.html)', url_name).group(0)
+                data.append({"name": a.text.strip(), "url": url_name})
         return json.dumps(data)
     else:
         raise Exception("Unexpected Input")
