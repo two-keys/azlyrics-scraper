@@ -26,9 +26,7 @@ def artists(letter):
                     url_name = url_name_stripped.group(0)
                     data.append({"name": a.text.strip(), "url": url_name})
                 else:
-                    print("href-type:",type(a['href']))
-                    print("href:",a['href'])
-                    print("url_name_stripped:",type(url_name_stripped))
+                    print(a.text.strip()," could not be found on azlyrics.","href:",a['href'])
         return json.dumps(data)
     else:
         raise Exception("Unexpected Input")
