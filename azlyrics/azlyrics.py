@@ -21,8 +21,14 @@ def artists(letter):
             links = div.findAll('a')
             for a in links:
                 url_name = a['href']
-                url_name = re.search('(?<=/).*(?=\.html)', url_name).group(0)
-                data.append({"name": a.text.strip(), "url": url_name})
+                url_name_stripped = re.search('(?<=/).*(?=\.html)', url_name)
+                if url_name_stripped is not None:
+                    url_name = url_name_stripped.group(0)
+                    data.append({"name": a.text.strip(), "url": url_name})
+                else:
+                    print("href-type:",type(a['href']))
+                    print("href:",a['href'])
+                    print("url_name_stripped:",type(url_name_stripped))
         return json.dumps(data)
     else:
         raise Exception("Unexpected Input")
