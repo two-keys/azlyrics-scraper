@@ -101,6 +101,7 @@ def songs(artist):
                         url_name = re.search('(?<=/).*', url_name).group(0)
                         songs.append({"name": tag.text, "url": url_name})
             elif tag.name == 'a':
+                print("Found song?", tag)
                 # this is probably an album item / song from before listalbum-item was added as a class
                 if tag['target'] is not None:
                     # all songs have target="_blank" in our timeframe
