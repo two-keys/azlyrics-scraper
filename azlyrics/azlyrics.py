@@ -76,6 +76,7 @@ def songs(artist):
     if all_albums is not None:
         first_album = all_albums.find('div', class_='album')
         album_name = first_album.b.text.strip('"')
+        print("Found album by ",artist['artist'],":",album_name)
         songs = []
 
         for tag in first_album.find_next_siblings(['a', 'div']):
@@ -99,7 +100,17 @@ def songs(artist):
                         url_name = re.search('(?<=/).*', url_name).group(0)
                         url_name = re.search('(?<=/).*', url_name).group(0)
                         songs.append({"name": tag.text, "url": url_name})
-
+            elif tag.name == 'a':
+                # this is probably an album item / song from before listalbum-item was added as a class
+                if tag['target'] is not None:
+                    # all songs have target="_blank" in our timeframe
+                    song_tag = tag
+                    if song_tag.text is "":
+                        pass
+                    elif song_tag.text:
+                        url_name = song_tag['href']
+                        url_name = re.search('[^/]+(?=\.html)', url_name).group(0)
+                        songs.append({"name": tag.text, "url": url_name})
         artist['albums'][album_name] = songs
     else:
         return None
