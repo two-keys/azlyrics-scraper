@@ -52,15 +52,15 @@ def artists(letter):
 def songs(artist):
     artist = artist.lower().replace(" ", "")
     first_char = artist[0]
-    url = base+first_char+"/"+artist+".html"
-    url = find_latest(url)
+    check_url = base+first_char+"/"+artist+".html"
+    url = find_latest(check_url)
 
     artist = {
         'artist': artist,
         'albums': {}
         }
     if url is None:
-        failed_url = base+first_char+"/"+artist+".html"
+        failed_url = check_url
         print("Could not find an entry for ", failed_url)
         artist['albums'] = []
         return artist
