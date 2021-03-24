@@ -34,7 +34,7 @@ def artists(letter):
         if req.status_code != requests.codes.ok:
             return json.dumps(data)
         soup = BeautifulSoup(req.content, "html.parser")
-        for div in soup.find_all("div", {"class": "container main-page"}):
+        for div in soup.find_all("div", {"class": re.compile("inn|container main-page")}):
             links = div.findAll('a')
             for a in links:
                 url_name = a['href']
@@ -54,16 +54,21 @@ def songs(artist):
     first_char = artist[0]
     url = base+first_char+"/"+artist+".html"
     url = find_latest(url)
-    req = requests.get(url, headers=headers)
 
     artist = {
         'artist': artist,
         'albums': {}
         }
+    if url is None:
+        failed_url = base+first_char+"/"+artist+".html"
+        print("Could not find an entry for ", failed_url)
+        artist['albums'] = []
+        return artist
+    req = requests.get(url, headers=headers)
 
     soup = BeautifulSoup(req.content, 'html.parser')
 
-    all_albums = soup.find('div', id='listAlbum')
+    all_albums = soup.find('div', id=re.compile("listAlbum"))
     if all_albums is not None:
         first_album = all_albums.find('div', class_='album')
         album_name = first_album.b.text.strip('"')
