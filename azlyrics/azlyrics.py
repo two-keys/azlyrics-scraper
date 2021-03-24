@@ -103,7 +103,7 @@ def songs(artist):
             elif tag.name == 'a':
                 print("Found song?", tag)
                 # this is probably an album item / song from before listalbum-item was added as a class
-                if tag['target'] is not None:
+                if tag.has_attr('target'):
                     # all songs have target="_blank" in our timeframe
                     song_tag = tag
                     if song_tag.text is "":
