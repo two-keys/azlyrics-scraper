@@ -9,24 +9,30 @@ agent = 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) \
 headers = {'User-Agent': agent}
 base = "azlyrics.com/"
 
+def try_connection(tries_left, query_url, in_headers=None):
+    result = None
+    try:
+        if headers == None:
+            result = requests.get(query_url).text
+        else:
+            result = requests.get(query_url, headers=in_headers).text
+    except:
+        if tries_left > 0:
+            print("Failed to send request, attempts left: ",tries_left)
+            sleep(30) # wait a minute
+            result = try_connection(tries_left - 1, query_url)
+        else:
+            print("Ran out of tries.")
+    else:
+        sleep(15)
+    return result
+
 def find_latest(url):
     query_url = 'http://web.archive.org/cdx/search/cdx?url=' + url + '&collapse=digest&from=20120903185847&to=20180720043037&output=json'
     print("Query_url:", query_url)
-    def try_connection(tries_left):
-        result = '[]'
-        try:
-            result = requests.get(query_url).text
-        except:
-            if tries_left > 0:
-                print("Failed to send request, attempts left: ",tries_left)
-                sleep(30) # wait a minute
-                result = try_connection(tries_left - 1)
-            else:
-                print("Ran out of tries.")
-        else:
-            sleep(15)
-        return result
-    urls = try_connection(5)
+    urls = try_connection(5, query_url)
+    if urls is None:
+        urls = '[]'
     parse_url = json.loads(urls) # gets json
     url_list = []
     for i in range(1,len(parse_url)):
@@ -136,7 +142,9 @@ def lyrics(artist, song):
     song = song.lower().replace(" ", "")
     url = base + "lyrics/" + artist + "/" + song + ".html"
     url = find_latest(url)
-    req = requests.get(url, headers=headers)
+    req = try_connection(5, url, headers)
+    if req is None:
+        req = ''
     soup = BeautifulSoup(req.content, "html.parser")
     l = soup.find_all("div", attrs={"class": None, "id": None})
     if not l:
