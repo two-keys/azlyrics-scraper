@@ -10,6 +10,7 @@ base = "azlyrics.com/"
 
 def find_latest(url):
     query_url = 'http://web.archive.org/cdx/search/cdx?url=' + url + '&collapse=digest&from=20120903185847&to=20180720043037&output=json'
+    print("Query_url:", query_url)
     urls = requests.get(query_url).text
     parse_url = json.loads(urls) # gets json
     url_list = []
