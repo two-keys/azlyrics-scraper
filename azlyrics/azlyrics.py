@@ -12,6 +12,7 @@ def find_latest(url):
     query_url = 'http://web.archive.org/cdx/search/cdx?url=' + url + '&collapse=digest&from=20120903185847&to=20180720043037&output=json'
     print("Query_url:", query_url)
     urls = requests.get(query_url).text
+    sleep(12)
     parse_url = json.loads(urls) # gets json
     url_list = []
     for i in range(1,len(parse_url)):
