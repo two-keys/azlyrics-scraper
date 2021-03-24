@@ -143,9 +143,10 @@ def lyrics(artist, song):
     url = base + "lyrics/" + artist + "/" + song + ".html"
     url = find_latest(url)
     req = try_connection(5, url, headers)
-    if req is None:
-        req = ''
-    soup = BeautifulSoup(req.content, "html.parser")
+    content = ''
+    if req != None:
+        content = req.content
+    soup = BeautifulSoup(content, "html.parser")
     l = soup.find_all("div", attrs={"class": None, "id": None})
     if not l:
         return {'Error': 'Unable to find ' + song + ' by ' + artist}
