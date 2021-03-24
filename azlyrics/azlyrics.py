@@ -6,17 +6,34 @@ import re
 agent = 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) \
         Gecko/20100101 Firefox/24.0'
 headers = {'User-Agent': agent}
-base = "https://www.azlyrics.com/"
+base = "azlyrics.com/"
 
+def find_latest(url):
+    query_url = 'http://web.archive.org/cdx/search/cdx?url=' + url + '&collapse=digest&from=20120903185847&to=20180720043037&output=json'
+    urls = rq.get(query_url).text
+    parse_url = json.loads(urls) # gets json
+    url_list = []
+    for i in range(1,len(parse_url)):
+        orig_url = parse_url[i][2]
+        tstamp = parse_url[i][1]
+        waylink = tstamp+'/'+orig_url
+        url_list.append(waylink)
+    ## Compiles final url pattern.
+    final_url = None
+    for url in url_list:
+        final_url = 'https://web.archive.org/web/'+url
+    return final_url
 
 def artists(letter):
     if letter.isalpha() and len(letter) is 1:
         letter = letter.lower()
         url = base + letter + ".html"
+        url = find_latest(url)
         req = requests.get(url, headers=headers)
-        soup = BeautifulSoup(req.content, "html.parser")
         data = []
-
+        if req.status_code != requests.codes.ok:
+            return json.dumps(data)
+        soup = BeautifulSoup(req.content, "html.parser")
         for div in soup.find_all("div", {"class": "container main-page"}):
             links = div.findAll('a')
             for a in links:
@@ -36,6 +53,7 @@ def songs(artist):
     artist = artist.lower().replace(" ", "")
     first_char = artist[0]
     url = base+first_char+"/"+artist+".html"
+    url = find_latest(url)
     req = requests.get(url, headers=headers)
 
     artist = {
@@ -83,7 +101,7 @@ def lyrics(artist, song):
     artist = artist.lower().replace(" ", "")
     song = song.lower().replace(" ", "")
     url = base + "lyrics/" + artist + "/" + song + ".html"
-
+    url = find_latest(url)
     req = requests.get(url, headers=headers)
     soup = BeautifulSoup(req.content, "html.parser")
     l = soup.find_all("div", attrs={"class": None, "id": None})
