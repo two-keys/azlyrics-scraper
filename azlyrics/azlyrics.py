@@ -12,7 +12,7 @@ base = "azlyrics.com/"
 def try_connection(tries_left, query_url, in_headers=None):
     result = None
     try:
-        if headers == None:
+        if in_headers == None:
             result = requests.get(query_url).text
         else:
             result = requests.get(query_url, headers=in_headers).text
@@ -20,7 +20,7 @@ def try_connection(tries_left, query_url, in_headers=None):
         if tries_left > 0:
             print("Failed to send request, attempts left: ",tries_left)
             sleep(30) # wait a minute
-            result = try_connection(tries_left - 1, query_url)
+            result = try_connection(tries_left - 1, query_url, in_headers)
         else:
             print("Ran out of tries.")
     else:
