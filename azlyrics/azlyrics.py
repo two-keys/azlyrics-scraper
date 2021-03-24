@@ -68,7 +68,7 @@ def songs(artist):
 
     soup = BeautifulSoup(req.content, 'html.parser')
 
-    all_albums = soup.find('div', id=re.compile("listAlbum"))
+    all_albums = soup.find('div', id="listAlbum")
     if all_albums is not None:
         first_album = all_albums.find('div', class_='album')
         album_name = first_album.b.text.strip('"')
