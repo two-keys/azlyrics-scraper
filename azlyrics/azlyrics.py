@@ -42,7 +42,7 @@ def artists(letter):
             links = div.findAll('a')
             for a in links:
                 url_name = a['href']
-                url_name_stripped = re.search('(?<=/).*(?=\.html)', url_name)
+                url_name_stripped = re.search('[^/]+(?=\.html)', url_name)
                 if url_name_stripped is not None:
                     url_name = url_name_stripped.group(0)
                     data.append({"name": a.text.strip(), "url": url_name})
@@ -96,9 +96,7 @@ def songs(artist):
                         pass
                     elif song_tag.text:
                         url_name = song_tag['href']
-                        url_name = re.search('(?<=/).*(?=\.html)', url_name).group(0)
-                        url_name = re.search('(?<=/).*', url_name).group(0)
-                        url_name = re.search('(?<=/).*', url_name).group(0)
+                        url_name = re.search('[^/]+(?=\.html)', url_name).group(0)
                         songs.append({"name": tag.text, "url": url_name})
             elif tag.name == 'a':
                 print("Found song?", tag)
