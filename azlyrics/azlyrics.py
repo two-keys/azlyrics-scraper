@@ -13,9 +13,9 @@ def try_connection(tries_left, query_url, in_headers=None):
     result = None
     try:
         if in_headers == None:
-            result = requests.get(query_url).text
+            result = requests.get(query_url)
         else:
-            result = requests.get(query_url, headers=in_headers).text
+            result = requests.get(query_url, headers=in_headers)
     except:
         if tries_left > 0:
             print("Failed to send request, attempts left: ",tries_left)
@@ -33,6 +33,8 @@ def find_latest(url):
     urls = try_connection(5, query_url)
     if urls is None:
         urls = '[]'
+    else:
+        urls = urls.text
     parse_url = json.loads(urls) # gets json
     url_list = []
     for i in range(1,len(parse_url)):
@@ -145,7 +147,6 @@ def lyrics(artist, song):
     req = try_connection(5, url, headers)
     content = ''
     if req != None:
-        print(req[0:12])
         content = req.content
     soup = BeautifulSoup(content, "html.parser")
     l = soup.find_all("div", attrs={"class": None, "id": None})
