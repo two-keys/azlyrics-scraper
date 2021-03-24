@@ -145,6 +145,7 @@ def lyrics(artist, song):
     req = try_connection(5, url, headers)
     content = ''
     if req != None:
+        print(req[0:12])
         content = req.content
     soup = BeautifulSoup(content, "html.parser")
     l = soup.find_all("div", attrs={"class": None, "id": None})
