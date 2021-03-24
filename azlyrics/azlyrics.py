@@ -22,6 +22,7 @@ def find_latest(url):
             waylink = tstamp+'/'+orig_url
             url_list.append(waylink)
     ## Compiles final url pattern.
+    print("Found ",len(url_list)," valid urls for ",url)
     final_url = None
     for url in url_list:
         final_url = 'https://web.archive.org/web/'+url
