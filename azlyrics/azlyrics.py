@@ -17,8 +17,10 @@ def find_latest(url):
     for i in range(1,len(parse_url)):
         orig_url = parse_url[i][2]
         tstamp = parse_url[i][1]
-        waylink = tstamp+'/'+orig_url
-        url_list.append(waylink)
+        status = parse_url[i][4]
+        if status == 200:
+            waylink = tstamp+'/'+orig_url
+            url_list.append(waylink)
     ## Compiles final url pattern.
     final_url = None
     for url in url_list:
