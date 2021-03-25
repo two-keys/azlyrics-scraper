@@ -150,7 +150,9 @@ def lyrics(artist, song):
     song = song.lower().replace(" ", "")
     url = base + "lyrics/" + artist + "/" + song + ".html"
     url = find_latest(url)
-    req = try_connection(5, url, headers)
+    req = None
+    if url is not None:
+        req = try_connection(5, url, headers)
     content = ''
     if req != None:
         content = req.content
