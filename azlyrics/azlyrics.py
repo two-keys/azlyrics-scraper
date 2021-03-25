@@ -17,8 +17,13 @@ def try_connection(tries_left, query_url, in_headers=None):
         else:
             result = requests.get(query_url, headers=in_headers)
     except:
-        if tries_left > 0:
-            print("Failed to send request, attempts left: ",tries_left)
+        if result.status_code == 404:
+            print("Invalid url: ", query_url)
+        elif tries_left > 0:
+            reason_for_failure = 'Unknown Error'
+            if result.reason != None:
+                reason_for_failure = result.reason
+            print("Failed to send request: ",reason_for_failure,". Attempts left: ",tries_left)
             sleep(30) # wait a minute
             result = try_connection(tries_left - 1, query_url, in_headers)
         else:
