@@ -17,7 +17,7 @@ def try_connection(tries_left, query_url, in_headers=None):
         else:
             result = requests.get(query_url, headers=in_headers)
     except:
-        if result.status_code == 404:
+        if result != None and result.status_code == 404:
             print("Invalid url: ", query_url)
             sleep(15)
         elif tries_left > 0:
