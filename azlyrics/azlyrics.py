@@ -22,7 +22,7 @@ def try_connection(tries_left, query_url, in_headers=None):
             sleep(15)
         elif tries_left > 0:
             reason_for_failure = 'Unknown Error'
-            if result.reason != None:
+            if result != None and result.reason != None:
                 reason_for_failure = result.reason
             print("Failed to send request: ",reason_for_failure,". Attempts left: ",tries_left)
             sleep(30) # wait a minute
