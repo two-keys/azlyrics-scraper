@@ -19,6 +19,7 @@ def try_connection(tries_left, query_url, in_headers=None):
     except:
         if result.status_code == 404:
             print("Invalid url: ", query_url)
+            sleep(15)
         elif tries_left > 0:
             reason_for_failure = 'Unknown Error'
             if result.reason != None:
