@@ -46,8 +46,7 @@ def find_latest(url):
     for i in range(1,len(parse_url)):
         orig_url = parse_url[i][2]
         tstamp = parse_url[i][1]
-        status = int(parse_url[i][4])
-        if status == 200:
+        if parse_url[i][4].isnumeric() and int(parse_url[i][4]) == 200:
             waylink = tstamp+'/'+orig_url
             url_list.append(waylink)
     ## Compiles final url pattern.
