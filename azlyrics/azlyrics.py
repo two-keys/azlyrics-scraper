@@ -136,9 +136,9 @@ def songs(artist):
                         pass
                     elif song_tag.text:
                         url_name = song_tag['href']
-                        if url_name:
-                            url_name = re.search('[^/]+(?=\.html)', url_name).group(0)
-                            songs.append({"name": tag.text, "url": url_name})
+                        url_search = re.search('[^/]+(?=\.html)', url_name)
+                        if url_search:
+                            songs.append({"name": tag.text, "url": url_search.group(0)})
         artist['albums'][album_name] = songs
     else:
         return None
